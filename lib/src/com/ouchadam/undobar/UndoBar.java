@@ -1,7 +1,9 @@
 package com.ouchadam.undobar;
 
 import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.widget.TextView;
 
@@ -20,6 +22,15 @@ public class UndoBar<T> implements View.OnClickListener {
 
     public interface Callback<T> {
         void onUndo(T what);
+    }
+
+    public UndoBar(ViewGroup viewToAttachTo, LayoutInflater inflater, Callback<T> callback) {
+        this(inflateUndoBar(viewToAttachTo, inflater), callback);
+    }
+
+    private static View inflateUndoBar(ViewGroup viewToAttachTo, LayoutInflater inflater) {
+        View view = inflater.inflate(R.layout.undo_bar, viewToAttachTo);
+        return view.findViewById(R.id.undobar);
     }
 
     public UndoBar(View undoBarView, Callback<T> undoCallback) {

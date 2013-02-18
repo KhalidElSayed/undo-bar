@@ -34,8 +34,3 @@ local.properties
 
 # MAC
 *.DS_Store
-
-# api scripts
-session.key
-response.txt
-.pt
