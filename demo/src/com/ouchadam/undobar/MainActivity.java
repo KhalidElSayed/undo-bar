@@ -11,9 +11,9 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity implements UndoBar.Callback<MainActivity.TextHolder>, View.OnClickListener {
 
-    private UndoBar<TextHolder> undoBar;
     private TextView label;
     private EditText editText;
+    private ViewGroup undoBarContainer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,13 +25,8 @@ public class MainActivity extends Activity implements UndoBar.Callback<MainActiv
     private void initViews() {
         label = (TextView) findViewById(R.id.label);
         editText = (EditText) findViewById(R.id.edit_text);
-        initUndoBar();
+        undoBarContainer = (ViewGroup) findViewById(R.id.undobar_container);
         initSetTextButton();
-    }
-
-    private void initUndoBar() {
-        ViewGroup parentView = (ViewGroup) findViewById(R.id.undobar_container);
-        undoBar = new UndoBar<TextHolder>(parentView, getLayoutInflater(), this);
     }
 
     private void initSetTextButton() {
@@ -44,7 +39,12 @@ public class MainActivity extends Activity implements UndoBar.Callback<MainActiv
         String newText = editText.getText().toString();
         String previousText = label.getText().toString();
         label.setText(newText);
-        undoBar.showUndoBar(false, "Undo set text?", new TextHolder(previousText));
+
+        showUndoBar(new TextHolder(previousText));
+    }
+
+    private void showUndoBar(TextHolder textHolder) {
+        new UndoBar<TextHolder>(undoBarContainer, this).show(textHolder);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class MainActivity extends Activity implements UndoBar.Callback<MainActiv
         label.setText(what.getMessage());
     }
 
-    public class TextHolder {
+    public class TextHolder implements Undoable {
 
         private final String message;
 
@@ -63,6 +63,11 @@ public class MainActivity extends Activity implements UndoBar.Callback<MainActiv
 
         public String getMessage() {
             return message;
+        }
+
+        @Override
+        public String label() {
+            return "Text set.";
         }
 
     }

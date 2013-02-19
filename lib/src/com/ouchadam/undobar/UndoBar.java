@@ -1,5 +1,6 @@
 package com.ouchadam.undobar;
 
+import android.content.Context;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,7 +8,7 @@ import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.widget.TextView;
 
-public class UndoBar<T> implements View.OnClickListener {
+public class UndoBar<T extends Undoable> implements View.OnClickListener {
 
     private static final int ALPHA_MAX = 1;
     private static final int ALPHA_MIN = 0;
@@ -24,13 +25,17 @@ public class UndoBar<T> implements View.OnClickListener {
         void onUndo(T what);
     }
 
-    public UndoBar(ViewGroup viewToAttachTo, LayoutInflater inflater, Callback<T> callback) {
-        this(inflateUndoBar(viewToAttachTo, inflater), callback);
+    public UndoBar(ViewGroup viewToAttachTo, Callback<T> callback) {
+        this(inflateUndoBar(viewToAttachTo), callback);
     }
 
-    private static View inflateUndoBar(ViewGroup viewToAttachTo, LayoutInflater inflater) {
-        View view = inflater.inflate(R.layout.undo_bar, viewToAttachTo);
+    private static View inflateUndoBar(ViewGroup viewToAttachTo) {
+        View view = getLayoutInflater(viewToAttachTo).inflate(R.layout.undo_bar, viewToAttachTo);
         return view.findViewById(R.id.undobar);
+    }
+
+    private static LayoutInflater getLayoutInflater(ViewGroup viewGroup) {
+        return (LayoutInflater) viewGroup.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public UndoBar(View undoBarView, Callback<T> undoCallback) {
@@ -74,11 +79,11 @@ public class UndoBar<T> implements View.OnClickListener {
         setAnimationDuration(ALPHA_MIN);
     }
 
-    public void showUndoBar(boolean immediate, CharSequence message, T previousState) {
+    public void show(T previousState) {
         what = previousState;
-        messageView.setText(message);
+        messageView.setText(previousState.label());
         setupHandler();
-        displayUndoView(immediate);
+        displayUndoView();
     }
 
     private void setupHandler() {
@@ -94,13 +99,9 @@ public class UndoBar<T> implements View.OnClickListener {
         return hideUndoHandler.postDelayed(runnable, undoBarView.getResources().getInteger(R.integer.undobar_hide_delay_ms));
     }
 
-    private void displayUndoView(boolean immediate) {
+    private void displayUndoView() {
         undoBarView.setVisibility(View.VISIBLE);
-        if (!immediate) {
-            animateIntoView();
-        } else {
-            undoBarView.setAlpha(ALPHA_MAX);
-        }
+        animateIntoView();
     }
 
     private void animateIntoView() {
