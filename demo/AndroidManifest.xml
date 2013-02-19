@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.ouchadam.undobar" android:versionCode="1" android:versionName="0.1-SNAPSHOT">
 
+  <uses-sdk android:targetSdkVersion="17"/>
+
   <application android:icon="@drawable/app_launcher" android:label="@string/app_name">
     <activity android:name=".MainActivity">
       <intent-filter>
