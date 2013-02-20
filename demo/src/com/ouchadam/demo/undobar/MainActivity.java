@@ -1,4 +1,4 @@
-package com.ouchadam.undobar;
+package com.ouchadam.demo.undobar;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,6 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.ouchadam.undobar.R;
+import com.ouchadam.undobar.UndoBar;
+import com.ouchadam.undobar.Undoable;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
