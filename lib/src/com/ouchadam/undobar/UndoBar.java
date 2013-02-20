@@ -31,7 +31,7 @@ public class UndoBar<T extends Undoable> implements View.OnClickListener {
     }
 
     private static ViewGroup getViewGroup(Activity activity) {
-        return ((ViewGroup) activity.findViewById(android.R.id.content));
+        return (ViewGroup) activity.findViewById(android.R.id.content);
     }
 
     public UndoBar(ViewGroup viewToAttachTo, Callback<T> callback) {
