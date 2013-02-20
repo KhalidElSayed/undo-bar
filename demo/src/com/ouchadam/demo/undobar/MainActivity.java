@@ -7,7 +7,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.ouchadam.undobar.R;
 import com.ouchadam.undobar.UndoBar;
 import com.ouchadam.undobar.Undoable;
 
