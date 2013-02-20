@@ -3,17 +3,15 @@ package com.ouchadam.undobar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements UndoBar.Callback<MainActivity.TextHolder>, View.OnClickListener {
+public class MainActivity extends Activity implements View.OnClickListener {
 
     private TextView label;
     private EditText editText;
-    private ViewGroup undoBarContainer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,7 +23,6 @@ public class MainActivity extends Activity implements UndoBar.Callback<MainActiv
     private void initViews() {
         label = (TextView) findViewById(R.id.label);
         editText = (EditText) findViewById(R.id.edit_text);
-        undoBarContainer = (ViewGroup) findViewById(R.id.undobar_container);
         initSetTextButton();
     }
 
@@ -44,14 +41,16 @@ public class MainActivity extends Activity implements UndoBar.Callback<MainActiv
     }
 
     private void showUndoBar(TextHolder textHolder) {
-        new UndoBar<TextHolder>(undoBarContainer, this).show(textHolder);
+        new UndoBar<TextHolder>(this, undoCallback).show(textHolder);
     }
 
-    @Override
-    public void onUndo(TextHolder what) {
-        Toast.makeText(this, "set text to : " + what.getMessage(), Toast.LENGTH_SHORT).show();
-        label.setText(what.getMessage());
-    }
+    private final UndoBar.Callback<MainActivity.TextHolder> undoCallback = new UndoBar.Callback<TextHolder>() {
+        @Override
+        public void onUndo(TextHolder what) {
+            Toast.makeText(MainActivity.this, "set text to : " + what.getMessage(), Toast.LENGTH_SHORT).show();
+            label.setText(what.getMessage());
+        }
+    };
 
     public class TextHolder implements Undoable {
 

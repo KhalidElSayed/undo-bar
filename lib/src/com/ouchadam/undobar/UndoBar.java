@@ -1,5 +1,6 @@
 package com.ouchadam.undobar;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -25,17 +26,25 @@ public class UndoBar<T extends Undoable> implements View.OnClickListener {
         void onUndo(T what);
     }
 
+    public UndoBar(Activity activity, Callback<T> callback) {
+        this(getViewGroup(activity), callback);
+    }
+
+    private static ViewGroup getViewGroup(Activity activity) {
+        return ((ViewGroup) activity.findViewById(android.R.id.content));
+    }
+
     public UndoBar(ViewGroup viewToAttachTo, Callback<T> callback) {
         this(inflateUndoBar(viewToAttachTo), callback);
     }
 
     private static View inflateUndoBar(ViewGroup viewToAttachTo) {
-        View view = getLayoutInflater(viewToAttachTo).inflate(R.layout.undo_bar, viewToAttachTo);
+        View view = getLayoutInflater(viewToAttachTo.getContext()).inflate(R.layout.undo_bar, viewToAttachTo);
         return view.findViewById(R.id.undobar);
     }
 
-    private static LayoutInflater getLayoutInflater(ViewGroup viewGroup) {
-        return (LayoutInflater) viewGroup.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    private static LayoutInflater getLayoutInflater(Context context) {
+        return (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public UndoBar(View undoBarView, Callback<T> undoCallback) {
@@ -44,15 +53,10 @@ public class UndoBar<T extends Undoable> implements View.OnClickListener {
         this.undoCallback = undoCallback;
         messageView = (TextView) undoBarView.findViewById(R.id.undobar_message);
         setUndoClickListener();
-        hideUndoBarImmediately();
     }
 
     private void setUndoClickListener() {
         undoBarView.findViewById(R.id.undobar_button).setOnClickListener(this);
-    }
-
-    private void hideUndoBarImmediately() {
-        hideUndoBar(true);
     }
 
     @Override

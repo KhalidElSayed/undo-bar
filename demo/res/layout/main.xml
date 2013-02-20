@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                style="@style/Match"
-                android:id="@+id/parent_view">
+                style="@style/Match">
 
     <TextView
         android:id="@+id/label"
@@ -21,10 +20,5 @@
         style="@style/MatchWidth"
         android:layout_below="@+id/edit_text"
         android:text="Set text"/>
-
-    <FrameLayout
-        android:id="@+id/undobar_container"
-        style="@style/MatchWidth"
-        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>
