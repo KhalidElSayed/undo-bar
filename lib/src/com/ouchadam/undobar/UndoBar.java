@@ -1,5 +1,7 @@
 package com.ouchadam.undobar;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
@@ -70,8 +72,9 @@ public class UndoBar<T extends Undoable> implements View.OnClickListener {
         if (!immediate) {
             animator.cancel();
             animateFadeOut();
+        } else {
+            removeBarView();
         }
-        removeBarView();
     }
 
     private void removeBarView() {
@@ -80,7 +83,12 @@ public class UndoBar<T extends Undoable> implements View.OnClickListener {
     }
 
     private void animateFadeOut() {
-        setAnimationDuration(ALPHA_MIN);
+        setAnimationDuration(ALPHA_MIN).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                undoBarView.setVisibility(View.GONE);
+            }
+        });
     }
 
     public void show(T previousState) {
